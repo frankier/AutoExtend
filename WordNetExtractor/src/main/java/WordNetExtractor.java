@@ -20,17 +20,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
-import net.didion.jwnl.JWNL;
-import net.didion.jwnl.JWNLException;
-import net.didion.jwnl.data.IndexWord;
-import net.didion.jwnl.data.IndexWordSet;
-import net.didion.jwnl.data.POS;
-import net.didion.jwnl.data.Pointer;
-import net.didion.jwnl.data.PointerType;
-import net.didion.jwnl.data.Synset;
-import net.didion.jwnl.data.Word;
-import net.didion.jwnl.dictionary.Dictionary;
-import net.didion.jwnl.dictionary.MorphologicalProcessor;
+import net.sf.extjwnl.JWNLException;
+import net.sf.extjwnl.data.IndexWord;
+import net.sf.extjwnl.data.IndexWordSet;
+import net.sf.extjwnl.data.POS;
+import net.sf.extjwnl.data.Pointer;
+import net.sf.extjwnl.data.PointerType;
+import net.sf.extjwnl.data.Synset;
+import net.sf.extjwnl.data.Word;
+import net.sf.extjwnl.dictionary.Dictionary;
+import net.sf.extjwnl.dictionary.MorphologicalProcessor;
 
 @SuppressWarnings("unchecked")
 public class WordNetExtractor
@@ -42,22 +41,20 @@ public class WordNetExtractor
 	public static void main(String[] args) throws IOException, JWNLException
 	{
 		// path to JWNL prop xml file
-		JWNL.initialize(new FileInputStream("[...]"));
-		dictionary = Dictionary.getInstance();
+		dictionary = Dictionary.getInstance(new FileInputStream(args[0]));
 		
 		// path to input word embeddings
-		String file_name = "[...]";
+		String file_name = args[1];
 		
 		// path to output folder
-		String folder = "[...]";
+		String folder = args[2];
 		
 		if (file_name.endsWith(".bin"))
 			Shared.loadGoogleModel(file_name);
 		else
 			Shared.loadTxtModel(file_name);
 		
-		JWNL.Version ver = JWNL.getVersion();
-		System.out.printf("RESOURCE: WN " + ver.toString() + "\n");
+		System.out.printf("RESOURCE: " + getWNId() + "\n");
 		System.out.printf("VECTORS: " + folder + "\n");
 		System.out.printf("TARGET: " + folder + "\n");
 
@@ -73,6 +70,18 @@ public class WordNetExtractor
 
 		System.out.printf("DONE");
 	}	
+
+	private static String getWNId() {
+		Dictionary.Version ver = dictionary.getVersion();
+		String ret = "wn-";
+		String lang = ver.getLocale().getLanguage();
+		if (lang != "en") {
+			ret += lang;
+			ret += "-";
+		}
+		ret += Double.toString(ver.getNumber());
+		return ret;
+	}
 	
 	private static void extractWordsAndSynsets(String filenameWords, String filenameSynsets, String filenameLexemes, String filenameGlosses) throws JWNLException
 	{
@@ -150,7 +159,7 @@ public class WordNetExtractor
 
 					++lexemCounter;
 
-					String sensekey = synset.getSenseKey(word.getLemma());
+					String sensekey = word.getSenseKey();
 
 					writerSynsets.print(sensekey + ",");
 					writerLexemes.print(WordIndex.get(lemma) + " " + synsetCounterAll + "\n");
@@ -210,9 +219,7 @@ public class WordNetExtractor
 	
 	private static String getId(Synset synset)
 	{
-		JWNL.Version ver = JWNL.getVersion();
-		
-		String id = "wn-" + ver.getNumber() + "-" + String.format("%08d", synset.getOffset()) + "-" + synset.getPOS().getKey();
+		String id = getWNId() + "-" + String.format("%08d", synset.getOffset()) + "-" + synset.getPOS().getKey();
 		
 		return id;
 	}
@@ -260,7 +267,7 @@ public class WordNetExtractor
 				Synset synset = itr.next();
 				String synsetId = getId(synset);
 
-				Pointer[] pointers = synset.getPointers(pointer);
+				List<Pointer> pointers = synset.getPointers(pointer);
 				for (Pointer p : pointers)
 				{
 					Synset targetSynset = p.getTargetSynset();
