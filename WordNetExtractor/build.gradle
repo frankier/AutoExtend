@@ -4,11 +4,9 @@ mainClassName = "WordNetExtractor"
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
   // https://mvnrepository.com/artifact/net.sf.jwordnet/jwnl
-  //compile group: 'net.sf.extjwnl', name: 'extjwnl', version: '1.9.4'
-  implementation 'com.github.frankier:extjwnl:accept-space-padding-SNAPSHOT'
+  compile group: 'net.sf.extjwnl', name: 'extjwnl', version: '1.9.4'
 }
