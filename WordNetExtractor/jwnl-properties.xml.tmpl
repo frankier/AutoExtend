@@ -5,7 +5,9 @@
         <dictionary class="net.sf.extjwnl.dictionary.FileBackedDictionary">  
                 <param name="dictionary_element_factory" value="FiWNFileDictionaryElementFactory"/>
                 <param name="file_manager" value="net.sf.extjwnl.dictionary.file_manager.FileManagerImpl">  
-                        <param name="file_type" value="net.sf.extjwnl.princeton.file.PrincetonRandomAccessDictionaryFile"/>  
+                        <param name="file_type" value="net.sf.extjwnl.princeton.file.PrincetonRandomAccessDictionaryFile">
+                                <param name="encoding" value="UTF-8"/>
+                        </param>
                         <param name="dictionary_path" value="FIWN_PATH"/>  
                 </param>  
         </dictionary>  
