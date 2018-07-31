@@ -29,7 +29,7 @@ function [] = AutoExtend(varargin)
         weights = [sWeight lWeight rWeight 0];
         
     else
-        folder = '[...]';
+        folder = varargin{1};
         normalizeWeights = true;
         sWeight = 0.20;
         lWeight = 0.20;
