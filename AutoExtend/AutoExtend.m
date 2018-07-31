@@ -43,7 +43,6 @@ function [] = AutoExtend(varargin)
         RelationFiles{2} = 'verbGroup.txt';
         RelationFiles{3} = 'similar.txt';
         RelationFiles{4} = 'antonym.txt';
-        RelationFiles = [];
         
         settings = [startNormalizedED normWhenPossibleED endWhenNotED];
         weights = [sWeight lWeight rWeight 0];
