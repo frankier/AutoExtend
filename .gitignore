@@ -1,1 +1,4 @@
 .gradle
+
+/WordNetExtractor/jwnl-properties.xml
+/WordNetExtractor/build/
