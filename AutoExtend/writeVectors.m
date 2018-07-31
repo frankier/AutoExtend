@@ -5,7 +5,7 @@ function [] = writeVectors(varargin)
     
     writeWords = true;
     writeSynsets = true;
-    writeLexemes = false;
+    writeLexemes = true;
     
     if (nargin == 5)   
         writeWords = varargin{3};
